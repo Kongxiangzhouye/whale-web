@@ -89,7 +89,7 @@ paths:
                   code:
                     type: integer
                     
-  "api/v1/articles":
+  "/api/v1/articles":
     get:
       summary: articles
       responses:
@@ -99,7 +99,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Articles"
-  "api/v1/articles/{pk}":
+  "/api/v1/articles/{pk}":
     get:
       summary: articles
       parameters:  
