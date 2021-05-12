@@ -72,6 +72,72 @@ paths:
                     type: integer
                   code:
                     type: integer
+  "/api/v1/verify/{token}":
+    get:
+      parameters:  
+        - name: token
+          in: path
+          description: token。
+          required: true
+          schema:
+            type: string
+      summary: verify verification token
+      responses:
+        '200':
+          description: success verify
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifySuccess"
+          
+  "/api/v1/register":
+    post:
+      summary: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterForm"
+      responses:
+        '200':
+          description: success register
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/User"
+                  code:
+                    type: integer
+                    
+  "api/v1/articles":
+    get:
+      summary: articles
+      responses:
+        '200':
+          description: get all articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Articles"
+  "api/v1/articles/{pk}":
+    get:
+      summary: articles
+      parameters:  
+        - name: pk
+          in: path
+          description: primary key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get all articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
 components:
   schemas:
     CommonResponse: # common response which has data and code properties
@@ -134,3 +200,45 @@ components:
           minimum: 1
         name:
           type: string
+    VerifySuccess:
+      type: object
+      properties:
+        data:
+          type: string
+        code:
+          type: integer
+    RegisterForm:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+        author:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        status:
+          type: string
+    Articles:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Article"
+        code:
+          type: integer
+        
