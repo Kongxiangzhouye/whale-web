@@ -53,8 +53,8 @@ class BluewhaleLoginView(LoginView):
             logger.error(e)
             return Response({"data": None, "code": 0}, status=status.HTTP_401_UNAUTHORIZED)
         user = self.serializer.validated_data['user']
+        user.company
         user.last_login_ip = get_client_ip(request)
-
         self.login()
         user.save(update_fields=['last_login_ip'])
         serializer = UserSerializer(user)
@@ -124,3 +124,39 @@ def register(request):
     user.save()
     django_login(request, user)
     return Response({"data": UserSerializer(user).data, "code": 0}, status=status.HTTP_201_CREATED)
+
+
+# add
+# 没有搞清楚django的逻辑, 具体实现先不写了= =
+@api_view(['GET'])
+def userOperator(request, userId):
+    """
+        获取用户userId的信息
+    """
+    data = request.data
+    print(userId)
+    return Response({"code": 200})
+
+
+@api_view(['POST'])
+def userOperator(request):
+    """
+        增加用户 (和register冲突) -> 可以将接口合并成一个 -> 但是register的逻辑似乎过于简单?
+    """
+    return Response({"code": 200})
+
+
+@api_view(['PUT'])
+def userOperator(request):
+    """
+        更新用户信息
+    """
+    return Response({"code": 200})
+
+
+@api_view(['DELETE'])
+def userOperator(request):
+    """
+        删除用户userId
+    """
+    return Response({"code": 200})

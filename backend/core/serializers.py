@@ -31,4 +31,11 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login_ip',
             'description',
             'groups',
+            'profilePicture',
+            'password',
+            'wechatId',
+            'school',
+            'major',
+            'company',
+            'position'
         )

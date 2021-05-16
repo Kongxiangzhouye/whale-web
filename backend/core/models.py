@@ -23,6 +23,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     description = models.TextField(_('description'), blank=True)
     last_login_ip = models.CharField(_('last login ip'), max_length=64, blank=True)
 
+    # add
+    profilePicture = models.CharField(max_length=255, verbose_name='头像', default='')
+    password = models.CharField(max_length=255, verbose_name='密码', default='')
+    wechatId = models.CharField(max_length=255, verbose_name='微信号', default='')
+    school = models.CharField(max_length=255, verbose_name='学校', default='')
+    major = models.CharField(max_length=255, verbose_name='专业', default='')
+    company = models.CharField(max_length=255, verbose_name='公司', default='')
+    position = models.CharField(max_length=255, verbose_name='职位', default='')
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

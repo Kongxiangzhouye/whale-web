@@ -19,7 +19,8 @@ from rest_framework import routers
 from rest_auth.views import LogoutView
 from core.views_auth import BluewhaleLoginView, get_user_info, send_verification_mail,\
     verify_verification_token,\
-    register
+    register,\
+    userOperator
 from blog.views import ArticleListCreateView, ArticleDetailView
 from rest_framework import routers
 
@@ -40,4 +41,7 @@ urlpatterns = [
     path(f'{api_prefix}/articles', ArticleListCreateView.as_view(), name='articles'),
     path(f'{api_prefix}/articles/<pk>', ArticleDetailView.as_view(), name='article'),
     path(f'{api_prefix}/', include(router.urls)),
+
+    # add
+    path(f'{api_prefix}/user', userOperator, name="userOper")
 ]
