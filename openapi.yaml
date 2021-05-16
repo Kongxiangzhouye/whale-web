@@ -111,7 +111,7 @@ paths:
                   code:
                     type: integer
                     
-  "api/v1/articles":
+  "/api/v1/articles":
     get:
       summary: articles
       responses:
@@ -121,7 +121,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Articles"
-  "api/v1/articles/{pk}":
+  "/api/v1/articles/{pk}":
     get:
       summary: articles
       parameters:  
@@ -138,6 +138,73 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Article"
+  # 不懂如何把put, post, get, delete 合并到一起
+  "/api/v1/user/{userId}":
+    get:
+      summary: get user
+      parameters:
+        - name: userId
+          in: path
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get userId's info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    delete:
+      summary: delete user
+      parameters:
+        - name: userId
+          in: path
+          description: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: delete userId's info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+  "/api/v1/user":
+    # 和resister的接口类似 后续需要清理 = =
+    post:
+      summary: insert user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: insert user info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      summary: update user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        '200':
+          description: update user info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
 components:
   schemas:
     CommonResponse: # common response which has data and code properties
@@ -191,6 +258,20 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Group"
+        profilePicture: # 头像
+          type: string
+        password:
+          type: string
+        wechat_id:
+          type: string
+        school:
+          type: string
+        major:
+          type: string
+        company:
+          type: string
+        position:
+          type: string
     Group:
       type: object
       properties:
