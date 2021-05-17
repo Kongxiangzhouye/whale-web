@@ -128,35 +128,37 @@ def register(request):
 
 # add
 # 没有搞清楚django的逻辑, 具体实现先不写了= =
-@api_view(['GET'])
-def userOperator(request, userId):
+@api_view(['GET', 'DELETE'])
+def userOperator(request, email):
     """
-        获取用户userId的信息
+        获取给定email的用户信息(email唯一)
     """
-    data = request.data
-    print(userId)
-    return Response({"code": 200})
+    if request.method == 'GET':
+        userInfo = UserModel.objects.filter(email=email).first()
+        return Response({"data": UserSerializer(userInfo).data, "code": 0}, status=status.HTTP_200_OK)
+    else:
+        """
+            删除用户userId
+        """
+        return Response({"code": 200})
 
+# @api_view(['POST'])
+# def userOperator(request):
+#     """
+#         增加用户 (和register冲突) -> 可以将接口合并成一个 -> 但是register的逻辑似乎过于简单?
+#     """
+#     return Response({"code": 200})
+#
+#
+# @api_view(['PUT'])
+# def userOperator(request):
+#     """
+#         更新用户信息
+#     """
+#     return Response({"code": 200})
 
-@api_view(['POST'])
-def userOperator(request):
-    """
-        增加用户 (和register冲突) -> 可以将接口合并成一个 -> 但是register的逻辑似乎过于简单?
-    """
-    return Response({"code": 200})
-
-
-@api_view(['PUT'])
-def userOperator(request):
-    """
-        更新用户信息
-    """
-    return Response({"code": 200})
-
-
-@api_view(['DELETE'])
-def userOperator(request):
-    """
-        删除用户userId
-    """
-    return Response({"code": 200})
+#
+# @api_view(['DELETE'])
+# def userOperator(request):
+#
+#
