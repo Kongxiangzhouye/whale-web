@@ -198,6 +198,18 @@ Django REST Framework 本身提供方便的工具可以查看已有接口的返�
 
 在上个课程中，我们简单介绍了OpenAPI相关规范。在我们的初始项目中，已经添加了初始的接口规范：[openapi.yaml](./openapi.yaml)
 
+我们可以通过如下几种方式对该接口规范文档进行编辑：
+
+### VS Code插件（推荐）
+在VS Code插件面板中搜索*swagger*，安装*OpenAPI(Swagger)Editor*。
+
+在VS Code编辑器中打开`openapi.yaml`，点击左侧API图标，会展示当前API规范的大纲。点击右上角预览按钮，可以对API规范文档
+进行预览。入下图所示
+
+![VS Code Swagger Editor](./images/task01-vscode-swagger.png)
+
+### 官方编辑器
+
 我们可以使用官方提供的工具[swagger-editor](https://github.com/swagger-api/swagger-editor)对文档进行编辑。
 
 * 首先下载docker镜像`docker pull swaggerapi/swagger-editor`
@@ -213,6 +225,74 @@ Django REST Framework 本身提供方便的工具可以查看已有接口的返�
 
 页面左边为`openapi.yaml`的内容，右边为解析后的接口呈现。可以看到目前已经定义了5个API接口，包括其HTTP方法、URL Path、
 返回格式等内容。
+### 编辑示例
+编写openapi 文档涉及以下步骤：
+
+1、明确接口需求，如 我们需要查询文章列表，在最近文章页面里展示
+
+2、设计请求url、请求参数、响应内容，这里为了让小伙伴们先熟悉openapi已经做好了接口设计，大家可以在此基础上修改调整（开发中需要前后端根据需求协商确定url、属性名、类型等接口信息）
+
+> 可以在前端浏览器，如chrome 快捷键F12打开web调试器 查看已提供的接口请求和响应信息
+
+![Swagger Editor openapi01](./images/task01-openapi-edit01.png)
+
+![Swagger Editor openapi02](./images/task01-openapi-edit02.png)
+
+3、打开编辑器，如swagger editor,编辑器或者插件提供了一些便捷操作辅助我们编写，这里我们先插入path
+![Swagger Editor openapi03](./images/task01-openapi-edit03.png)
+
+4、再添加操作
+![Swagger Editor openapi04](./images/task01-openapi-edit04.png)
+
+5、添加响应信息
+![Swagger Editor openapi05](./images/task01-openapi-edit05.png)
+> 为了结构清晰和数据复用（相同的内容可以用$ref引用）,我们在 components.schemas 下创建 响应对象
+
+![Swagger Editor openapi07](./images/task01-openapi-edit07.png)
+
+6、参考其他接口或者openapi规范 手动调整一下接口，如添加参数等
+![Swagger Editor openapi06](./images/task01-openapi-edit06.png)
+> 编写时注意yaml语法、tab空格对齐
+
+7、尝试执行，如果响应如期正常返回就编写完成了(需要启动运行 mock server 加载编写好的openapi.yaml，运行mock server的方法下面有讲到)
+![Swagger Editor openapi08](./images/task01-openapi-edit08.png)
+
+### 其他
+
+对于已有的接口如`/api/v1/send-verification`，本身不存在增删改查的概念，只是纯粹的接口。我们可以通过
+查看代码确认请求路径、HTTP方法、请求体、返回值等数据。
+
+其URL路径在`backend/bluewhale/urls.py`中定义：
+
+```Python
+path(f'{api_prefix}/send-verification', send_verification_mail, name='send verification mail'),
+```
+
+对应调用函数为`backend/core/views_auth.py`中的函数`send_verification_mail`：
+
+```Python
+@api_view(['POST'])
+def send_verification_mail(request):
+    data = request.data
+    email = data.get('email')
+    # Method BODY
+    return Response({"data": result, "code": 0})
+```
+
+其中装饰器`api_view`是Django REST Framework提供的函数，参数`POST`表示该函数只接受`HTTP POST`方法，
+对应`openapi.yaml`中的`post`入口。
+
+函数实现中先获取请求体中的`email`属性，对应`openapi.yaml`中的`SendVerificationForm`结构体。
+
+发送邮件后返回`Response({"data": result, "code": 0})`实例，对应`openapi.yaml`中的`responses`结构体。
+
+具体映射如图：
+
+![API vs openapi.yaml](./images/task01-api-request-response.png)
+
+在task00中搭建的环境里面，我们可以通过界面来观察浏览器发送的请求和接收的数据：
+
+![API in browser](./images/task01-api-send-verification.png)
 
 ## 运行mock server
 
@@ -236,8 +316,8 @@ Django REST Framework 本身提供方便的工具可以查看已有接口的返�
 
 本期课程任务为完成剩余已实现的接口文档的编写：
 
-* `api/v1/verify/<token> [name='verify verification token']`
-* `api/v1/register [name='register']`
+* ~~`api/v1/verify/<token> [name='verify verification token']`~~ (涉及邮件发送，取消)
+* ~~`api/v1/register [name='register']`~~ （涉及邮件发送，取消）
 * `api/v1/articles [name='articles']`
 * `api/v1/articles/<pk> [name='article']`
 
